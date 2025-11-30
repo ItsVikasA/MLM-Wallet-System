@@ -1,61 +1,61 @@
 # Implementation Plan
 
-- [ ] 1. Set up project structure and core interfaces
-  - Create directory structure for models, services, repositories, and tests
-  - Set up TypeScript configuration with strict type checking
-  - Install and configure testing frameworks (Jest for unit tests, fast-check for property tests)
+- [ ] 1. Set up Next.js project and core structure
+  - Initialize Next.js 14+ project with TypeScript and App Router
+  - Install dependencies: MongoDB, Mongoose, Tailwind CSS, shadcn/ui, NextAuth.js, Zod, bcrypt
+  - Set up directory structure: app/, components/, lib/, models/, services/, types/
+  - Configure Tailwind CSS and shadcn/ui components
+  - Set up MongoDB connection with Mongoose
+  - Configure environment variables (.env.local)
+  - Install testing frameworks (Jest, fast-check, React Testing Library)
   - Define core TypeScript interfaces for Member, Wallet, Transaction, TreeNode, Package
   - _Requirements: 1.1, 2.1, 3.1, 4.1, 5.1_
 
-- [ ] 2. Implement data models with validation
-  - [ ] 2.1 Create Member model with validation
-    - Implement Member interface with id, username, passwordHash, sponsorId, status, activePackageId
-    - Add validation for username uniqueness and password strength
+- [ ] 2. Implement Mongoose models with validation
+  - [ ] 2.1 Create Member Mongoose schema
+    - Define Member schema with fields: username, passwordHash, sponsorId, status, activePackageId, registrationDate
+    - Add unique index on username
+    - Add validation for required fields
     - _Requirements: 1.1, 1.5_
   
-  - [ ] 2.2 Create Wallet model
-    - Implement Wallet interface with id, memberId, type, balance, lastUpdated
+  - [ ] 2.2 Create Wallet Mongoose schema
+    - Define Wallet schema with fields: memberId, type (enum: 'main', 'commission'), balance, lastUpdated
     - Add validation to ensure balance is non-negative
+    - Add compound index on memberId and type
     - _Requirements: 1.4, 2.1, 2.4_
   
-  - [ ] 2.3 Create Transaction model
-    - Implement Transaction interface with all required fields
-    - Add validation for transaction amounts and types
+  - [ ] 2.3 Create Transaction Mongoose schema
+    - Define Transaction schema with all required fields
+    - Add validation for transaction amounts (positive) and types (enum)
+    - Add indexes on memberId and timestamp
     - _Requirements: 2.2, 6.1, 6.2_
   
-  - [ ] 2.4 Create TreeNode model
-    - Implement TreeNode interface with member relationships and leg volumes
+  - [ ] 2.4 Create TreeNode Mongoose schema
+    - Define TreeNode schema with member relationships and leg volumes
     - Add validation for tree structure integrity
+    - Add index on memberId and sponsorId
     - _Requirements: 4.1, 4.2, 5.2_
   
-  - [ ] 2.5 Create Package model
-    - Implement Package interface with pricing and commission rate
+  - [ ] 2.5 Create Package Mongoose schema
+    - Define Package schema with name, price, commissionRate, description, isActive
+    - Add validation for price and commissionRate (positive numbers)
     - _Requirements: 3.1, 3.2_
 
-- [ ] 3. Implement repository layer for data persistence
-  - [ ] 3.1 Create MemberRepository
-    - Implement methods: create, findById, findByUsername, update, delete
-    - Add database queries with proper error handling
-    - _Requirements: 1.1, 1.5_
+- [ ] 3. Implement service layer with business logic
+  - [ ] 3.1 Create database connection utility
+    - Set up MongoDB connection with Mongoose
+    - Add connection error handling and retry logic
+    - Export database connection function
+    - _Requirements: 8.1_
   
-  - [ ] 3.2 Create WalletRepository
-    - Implement methods: create, findByMemberId, updateBalance, getBalance
-    - Ensure atomic balance updates with transactions
-    - _Requirements: 1.4, 2.1, 2.5_
-  
-  - [ ] 3.3 Create TransactionRepository
-    - Implement methods: create, findByMemberId, findByDateRange, findByType
-    - Add support for filtering and ordering
-    - _Requirements: 2.2, 6.1, 6.3, 6.4, 6.5_
-  
-  - [ ] 3.4 Create GenealogyRepository
-    - Implement methods: createNode, findByMemberId, getDownline, getUpline, updateLegVolumes
-    - Add efficient tree traversal queries
-    - _Requirements: 4.1, 4.2, 4.5, 8.3_
-  
-  - [ ] 3.5 Create PackageRepository
-    - Implement methods: findAll, findById, findActive
-    - _Requirements: 3.1_
+  - [ ] 3.2 Create helper functions for models
+    - Add methods for Member model: create, findById, findByUsername, update
+    - Add methods for Wallet model: create, findByMemberId, updateBalance
+    - Add methods for Transaction model: create, findByMemberId, findByFilters
+    - Add methods for TreeNode model: create, findByMemberId, getDownline, getUpline
+    - Add methods for Package model: findAll, findById, findActive
+    - Use Mongoose queries with proper error handling
+    - _Requirements: 1.1, 1.5, 2.1, 2.5, 4.1, 4.2, 6.1_
 
 - [ ] 4. Implement Member Management Service
   - [ ] 4.1 Implement member registration

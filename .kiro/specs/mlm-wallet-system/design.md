@@ -425,7 +425,7 @@ The system employs a dual testing approach combining unit tests and property-bas
 
 Property-based tests verify that universal properties hold across all valid inputs, providing strong correctness guarantees.
 
-**Framework:** fast-check (for TypeScript/JavaScript implementation)
+**Framework:** fast-check (for property-based testing in TypeScript)
 
 **Configuration:**
 - Minimum 100 iterations per property test
@@ -448,7 +448,7 @@ Each of the 34 correctness properties defined above must be implemented as a pro
 
 Unit tests verify specific examples, integration points, and concrete scenarios.
 
-**Framework:** Jest (for TypeScript/JavaScript implementation)
+**Framework:** Jest with React Testing Library (for unit and component testing)
 
 **Unit Test Coverage:**
 - Specific examples demonstrating correct behavior
@@ -499,10 +499,13 @@ Track test coverage to ensure all critical paths are tested, aiming for:
 
 ### Technology Considerations
 
-**Language:** TypeScript is recommended for type safety and better tooling support
+**Framework:** Next.js 14+ with App Router for full-stack development
+
+**Language:** TypeScript for type safety across frontend and backend
 
 **Database:** 
-- Relational database (PostgreSQL) recommended for ACID compliance
+- MongoDB for flexible schema and scalability
+- Mongoose ODM for schema validation and query building
 - Support for transactions to ensure atomicity
 - Indexes on frequently queried fields (memberId, sponsorId, walletType)
 
